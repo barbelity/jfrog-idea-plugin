@@ -148,13 +148,15 @@ public class XrayGlobalConfiguration implements Configurable, Configurable.NoScr
     private Xray createXrayClient() throws KeyStoreProviderException {
         // use as a workaround to version not being username password validated
         String urlStr = StringUtil.trim(url.getText());
-        return XrayClient.create(urlStr,
-                StringUtil.trim(username.getText()),
-                String.valueOf(password.getPassword()),
-                USER_AGENT,
-                xrayConfig.isNoHostVerification(),
-                xrayConfig.getKeyStoreProvider(),
-                xrayConfig.getProxyConfForTargetUrl(urlStr));
+        return XrayClient.newBuilder()
+                .setUrl(urlStr)
+                .setUsername(StringUtil.trim(username.getText()))
+                .setPassword(String.valueOf(password.getPassword()))
+                .setUserAgent(USER_AGENT)
+                .setNoHostVerification(xrayConfig.isNoHostVerification())
+                .setKeyStoreProvider(xrayConfig.getKeyStoreProvider())
+                .setProxyConfig(xrayConfig.getProxyConfForTargetUrl(urlStr))
+                .build();
     }
 
     private void loadConfig() {
